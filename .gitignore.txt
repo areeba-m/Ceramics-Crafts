@@ -1,0 +1,53 @@
+# Ignore Spring Boot configuration
+/backend/src/main/resources/application.properties
+
+# === Java / Spring Boot ===
+/backend/target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# === IDEs ===
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Spring Tool Suite (STS)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# === Node.js / React ===
+/frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/frontend/build/
+
+# === VS Code ===
+.vscode/
+
+# === Environment files ===
+.env
+.env.local
+.env.*.local
+
+# === OS / Misc ===
+.DS_Store
+Thumbs.db
