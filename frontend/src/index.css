@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playfair+Display:wght@600&display=swap');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+   /* D8BFAA  E3C6A8 FFE4C4 F7E7CE E4C7A0 */ 
+  background-color: #E4C7A0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Heading font */
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Smooth hover transition for buttons */
+button, .ant-btn {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Glassmorphism enhancement for backdrop */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Tabs customization */
+.ant-tabs-tab {
+  font-weight: 600;
+  color: #333;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #D5A496 !important;
+}
+
+.ant-tabs-ink-bar {
+  background: #D5A496;
+}
+
+/* Form input tweaks */
+.ant-input-affix-wrapper {
+  border-radius: 0.5rem;
+}
+
+.ant-input,
+.ant-input-password {
+  background-color: #fff;
+  border: 1px solid #C9C1BE;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.ant-input:focus,
+.ant-input-password:focus,
+.ant-input-affix-wrapper:focus-within {
+  border-color: #8AA3A0;
+  box-shadow: none;
+}
+
+/* Divider */
+.ant-divider-inner-text {
+  color: #848E84;
+  font-size: 0.9rem;
+}
+
+/* Mobile optimization */
+@media (max-width: 640px) {
+  .text-3xl {
+    font-size: 1.75rem;
+  }
+
+  .p-8 {
+    padding: 1.5rem;
+  }
+}
+.ant-btn-primary {
+  background-color: #d97706 !important; /* amber-600 */
+  border-color: #d97706 !important;
+}
+
+.ant-btn-primary:hover {
+  background-color: #b45309 !important; /* amber-700 */
+  border-color: #b45309 !important;
+}
