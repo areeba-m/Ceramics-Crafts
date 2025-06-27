@@ -36,7 +36,7 @@ public class UserController {
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse("Invalid request.", e.getMessage()));
+                    .body(new ApiResponse("User already registered.", e.getMessage()));
 
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -58,13 +58,19 @@ public class UserController {
                     .maxAge(jwtUtil.getJwtExpirationMs() / 1000)
                     .sameSite("Strict")
                     .build();
-
             response.setHeader("Set-Cookie", cookie.toString());
 
+            // Create response with token
+            AuthResponse authResponse = new AuthResponse(token);
 
-            return ResponseEntity.ok(new ApiResponse("Login successful.",null));
-        } catch (Exception e) {
+            return ResponseEntity.ok(new ApiResponse("Login successful.",authResponse));
+        }
+        catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse(e.getMessage(), null));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Login failed.", e.getMessage()));
         }
 

@@ -1,8 +1,41 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "antd";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const ProfileDetails = () => {
+  const navigate = useNavigate();
+  const logout = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/users/auth/logout`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log(response);
+      if (response.status === 200) {
+        localStorage.removeItem("token", response?.data?.data?.token);
+        navigate("/login");
+        toast.error("Logged out", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          // transition: Bounce,
+        });
+      }
+    } catch (error) {}
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -34,21 +67,14 @@ const ProfileDetails = () => {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6">
           <Link to="/" className="w-full sm:w-auto">
-            <Button
-              className="w-full sm:w-auto border-[#A37B73] text-[#A37B73] hover:bg-[#fef2f0]"
-            >
+            <Button className="w-full sm:w-auto border-[#A37B73] text-[#A37B73] hover:bg-[#fef2f0]">
               Back to Home
             </Button>
           </Link>
 
-          <Link to="/login" className="w-full sm:w-auto">
-            <Button
-              danger
-              className="w-full sm:w-auto"
-            >
-              Logout
-            </Button>
-          </Link>
+          <Button onClick={logout} danger className="w-full sm:w-auto">
+            Logout
+          </Button>
         </div>
       </div>
     </motion.div>

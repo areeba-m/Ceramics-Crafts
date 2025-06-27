@@ -11,6 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import ceramicImage from "../assets/CeramicCraft.png"; // Replace with your image path
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 const { TabPane } = Tabs;
 
 const CeramicAuthPage = () => {
@@ -24,7 +25,7 @@ const CeramicAuthPage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
+      Name: "",
       email: "",
       phone: "",
       password: "",
@@ -42,40 +43,77 @@ const CeramicAuthPage = () => {
   }, []);
 
   const onSubmit = async (data) => {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+
     if (activeTab === "signup") {
-      // Handle signup logic
-      console.log("Signup data:", data);
-      message.success("Account created successfully!");
-    } else {
-      // Handle login logic
-      setLoginError(null);
-      const User = {
+      // Signup logic
+      const newUser = {
+        fullName: data.name,
         email: data.email,
         password: data.password,
+        phoneNumber: data.phoneNumber,
       };
+
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/user/login`,
-          User,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
+          `${import.meta.env.VITE_BASE_URL}/api/users/auth/signup`,
+          newUser,
+          { headers }
         );
 
-        console.log(response);
+        console.log("Signup Response:", response);
 
-        if (response.status === 201) {
+        if (response.status === 200) {
           localStorage.setItem("token", response?.data?.token);
           navigate("/");
         }
       } catch (error) {
+        console.error("Signup Error:", error);
+      }
+    } else {
+      // Login logic
+      setLoginError(null);
+
+      const loginUser = {
+        email: data.email,
+        password: data.password,
+      };
+
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/api/users/auth/login`,
+          loginUser,
+          { headers }
+        );
+
+        console.log("Login Response:", response);
+
+        if (response.status === 200) {
+          localStorage.setItem("token", response?.data?.data?.token);
+          navigate("/");
+          toast.success("Logged in", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: Bounce,
+          });
+        }
+      } catch (error) {
+        console.error("Login Error:", error);
+
         if (error.response) {
-          if (error.response.status === 401) {
+          const status = error.response.status;
+          if (status === 401) {
             setLoginError("Invalid email or password combination");
-          } else if (error.response.status === 404) {
+          } else if (status === 404) {
             setLoginError("Account not found - please check your email");
           } else {
             setLoginError("Login failed - please try again");
@@ -84,8 +122,6 @@ const CeramicAuthPage = () => {
           setLoginError("Network error - please check your connection");
         }
       }
-      // console.log("Login data:", data);
-      // message.success("Logged in successfully!");
     }
   };
 
