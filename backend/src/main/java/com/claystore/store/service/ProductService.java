@@ -2,20 +2,24 @@ package com.claystore.store.service;
 
 import com.claystore.store.entity.Product;
 import com.claystore.store.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ProductService {
 
     private final ProductRepository repository;
+    private final Cloudinary cloudinary;
 
-    public ProductService(ProductRepository repository) {
+    public ProductService(ProductRepository repository, Cloudinary cloudinary) {
         this.repository = repository; /*constructor injection*/
+        this.cloudinary = cloudinary;
     }
 
     public List<Product> getAllProducts(){
@@ -26,23 +30,66 @@ public class ProductService {
         return repository.findById(id);
     }
 
-    public Product saveProduct(Product product){
-        return repository.save(product);
+    public Product saveProduct(Product product, MultipartFile image){
+        try {
+            if (image != null && !image.isEmpty()) {
+                Map uploadResult = cloudinary.uploader().upload(
+                        image.getBytes(),
+                        ObjectUtils.emptyMap()
+                );
+                String imageUrl = (String) uploadResult.get("secure_url");
+                String publicId = (String) uploadResult.get("public_id");
+                product.setImageUrl(imageUrl);
+                product.setCloudinaryPublicId(publicId);
+            }
+
+            return repository.save(product);
+        } catch (Exception e) {
+            throw new RuntimeException("Image upload failed: " + e.getMessage());
+        }
     }
 
-    public Product updateProduct(int id, Product newProduct){
-        Product oldProduct = repository.findById(id).orElseThrow();
-        oldProduct.setName(newProduct.getName());
-        oldProduct.setDescription(newProduct.getDescription());
-        oldProduct.setMaterial(newProduct.getMaterial());
-        oldProduct.setColor(newProduct.getColor());
-        oldProduct.setSize(newProduct.getSize());
-        oldProduct.setPrice(newProduct.getPrice());
-        oldProduct.setCustomizable(newProduct.isCustomizable());
-        return repository.save(oldProduct);
+    public Product updateProduct(int id, Product newProduct, MultipartFile image) {
+        Product existingProduct = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        existingProduct.setName(newProduct.getName());
+        existingProduct.setDescription(newProduct.getDescription());
+        existingProduct.setMaterial(newProduct.getMaterial());
+        existingProduct.setSize(newProduct.getSize());
+        existingProduct.setPrice(newProduct.getPrice());
+
+        // re-upload image if provided
+        if (image != null && !image.isEmpty()) {
+            try {
+                Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+                String imageUrl = (String) uploadResult.get("secure_url");
+                String publicId = (String) uploadResult.get("public_id");
+                existingProduct.setImageUrl(imageUrl);
+                existingProduct.setCloudinaryPublicId(publicId);
+            } catch (Exception e) {
+                throw new RuntimeException("Image upload failed: " + e.getMessage());
+            }
+        }
+
+        return repository.save(existingProduct);
     }
 
-    public void deleteProduct(int id){
+
+    public void deleteProduct(int id) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // delete from cloudinary
+        try {
+            if (product.getCloudinaryPublicId() != null) {
+                cloudinary.uploader().destroy(product.getCloudinaryPublicId(), ObjectUtils.emptyMap());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete image from Cloudinary: " + e.getMessage());
+        }
+
         repository.deleteById(id);
     }
+
 }

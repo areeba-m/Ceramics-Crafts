@@ -27,8 +27,8 @@ public class User {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Column(nullable = false, length = 255)
-    @Size(min=6)
+    @Column(nullable = false)
+    @Size(min=3, message="Password must be more than 3 characters")
     private String password;
 
     private String phoneNumber;
