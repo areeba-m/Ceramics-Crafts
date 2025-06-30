@@ -50,19 +50,17 @@ public class UserController {
         try{
             User user = userService.authenticate(request.getEmail(), request.getPassword());
             String token = jwtUtil.generateToken(user.getEmail());
-
-            ResponseCookie cookie = ResponseCookie.from("jwt", token)
-                    .httpOnly(true)
-                    .secure(false) // set to false for development
-                    .path("/")
-                    .maxAge(jwtUtil.getJwtExpirationMs() / 1000)
-                    .sameSite("Strict")
-                    .build();
-
-            response.setHeader("Set-Cookie", cookie.toString());
-
-
-            return ResponseEntity.ok(new ApiResponse("Login successful.",null));
+//            ResponseCookie cookie = ResponseCookie.from("jwt", token)
+//                    .httpOnly(true)
+//                    .secure(false) // set to false for development
+//                    .path("/")
+//                    .maxAge(jwtUtil.getJwtExpirationMs() / 1000)
+//                    .sameSite("Strict")
+//                    .build();
+//
+//            response.setHeader("Set-Cookie", cookie.toString());
+            return ResponseEntity
+                    .ok(new ApiResponse("Login successful.",new AuthResponse(token)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse("Login failed.", e.getMessage()));
@@ -72,16 +70,15 @@ public class UserController {
 
     @PostMapping("/auth/logout")
     public ResponseEntity<ApiResponse> logout(HttpServletResponse response) {
-        ResponseCookie cookie = ResponseCookie.from("jwt", "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0) // expire immediately
-                .sameSite("Strict")
-                .build();
-
-        response.setHeader("Set-Cookie", cookie.toString());
-
+//        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+//                .httpOnly(true)
+//                .secure(false)
+//                .path("/")
+//                .maxAge(0) // expire immediately
+//                .sameSite("Strict")
+//                .build();
+//
+//        response.setHeader("Set-Cookie", cookie.toString());
         return ResponseEntity.ok(new ApiResponse("Logged out successfully.", null));
     }
 

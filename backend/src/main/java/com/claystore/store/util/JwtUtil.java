@@ -18,13 +18,18 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
-    public String generateToken(String email){
+    public String generateToken(String email) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
+
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
+
 
     public String extractEmail(String token){
         return Jwts.parser()

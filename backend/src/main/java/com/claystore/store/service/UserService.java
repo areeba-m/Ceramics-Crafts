@@ -28,7 +28,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User signUp(@Valid User user){
+    public User signUp(User user){
         if(userRepository.findByEmail(user.getEmail()).isPresent()){
             throw new RuntimeException("Email already registered");
         }
