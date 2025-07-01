@@ -5,31 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="172b0683-3eab-46f4-a939-14bde95c7222" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/configuration/CloudinaryConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/configuration/CloudinaryConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/dto/OrderItemDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/dto/OrderItemDetailDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/request/PlaceOrderRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/response/OrderResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/configuration/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/configuration/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/CustomizedProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/CustomizedProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/CustomizedProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/CustomizedProduct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/entity/OrderItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/repository/CustomizedProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/repository/CustomizedProductRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/CustomizedProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/CustomizedProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/ProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/util/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/util/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/OrderService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/configuration/JwtAuthenticationFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/configuration/JwtAuthenticationFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/ProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/ProductController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/Product.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/Product.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/OrderController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/Order.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/Order.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/OrderItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/entity/OrderItem.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/exception/GlobalExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/exception/GlobalExceptionHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/ProductService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/ProductService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/util/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/util/JwtUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/OrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/OrderService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -155,7 +146,8 @@
       <workItem from="1750832271055" duration="10711000" />
       <workItem from="1750847227177" duration="1888000" />
       <workItem from="1751003785080" duration="17620000" />
-      <workItem from="1751264505378" duration="346000" />
+      <workItem from="1751264505378" duration="16470000" />
+      <workItem from="1751349455231" duration="6508000" />
     </task>
     <servers />
   </component>
@@ -166,5 +158,15 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/../backend" />
     </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="jakarta.validation.UnexpectedTypeException" package="jakarta.validation" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
