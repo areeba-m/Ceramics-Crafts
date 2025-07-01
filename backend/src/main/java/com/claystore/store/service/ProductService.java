@@ -33,6 +33,11 @@ public class ProductService {
     public Product saveProduct(Product product, MultipartFile image){
         try {
             if (image != null && !image.isEmpty()) {
+                String contentType = image.getContentType();
+                if (!isImage(contentType)) {
+                    throw new IllegalArgumentException("Only image files are allowed (JPEG, PNG, GIF, etc.)");
+                }
+
                 Map uploadResult = cloudinary.uploader().upload(
                         image.getBytes(),
                         ObjectUtils.emptyMap()
@@ -61,6 +66,11 @@ public class ProductService {
 
         // re-upload image if provided
         if (image != null && !image.isEmpty()) {
+            String contentType = image.getContentType();
+            if (!isImage(contentType)) {
+                throw new IllegalArgumentException("Only image files are allowed (JPEG, PNG, GIF, etc.)");
+            }
+
             try {
                 Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
                 String imageUrl = (String) uploadResult.get("secure_url");
@@ -74,7 +84,6 @@ public class ProductService {
 
         return repository.save(existingProduct);
     }
-
 
     public void deleteProduct(int id) {
         Product product = repository.findById(id)
@@ -91,5 +100,16 @@ public class ProductService {
 
         repository.deleteById(id);
     }
+
+    private boolean isImage(String contentType) {
+        return contentType != null && (
+                contentType.equals("image/jpeg") ||
+                        contentType.equals("image/png") ||
+                        contentType.equals("image/gif") ||
+                        contentType.equals("image/webp") ||
+                        contentType.equals("image/svg+xml")
+        );
+    }
+
 
 }
