@@ -16,10 +16,6 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int quantity;
-
-    private double price;
-
     @ManyToOne
     @JoinColumn(name="order_id")
     @JsonBackReference
@@ -29,4 +25,6 @@ public class OrderItem {
     @JoinColumn(name="product_id")
     private Product product;
 
+    private int quantity;
+    private double price;
 }

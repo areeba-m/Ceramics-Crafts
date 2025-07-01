@@ -24,11 +24,14 @@ public class Order {
     @JoinColumn(name="user_id")
     private User user;
 
-    private LocalDateTime orderTime;
+    private String name;
+    private String address;
+    private String city;
+    private String phoneNumber;
+    private double totalAmount;
+    private LocalDateTime orderDate;
 
-    private Double totalAmount;
-
-    @OneToMany(mappedBy = "order", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade= CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<OrderItem> items = new ArrayList<>();
 }
