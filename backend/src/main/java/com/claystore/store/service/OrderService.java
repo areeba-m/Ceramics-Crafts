@@ -5,13 +5,11 @@ import com.claystore.store.entity.Order;
 import com.claystore.store.entity.OrderItem;
 import com.claystore.store.entity.Product;
 import com.claystore.store.entity.User;
-import com.claystore.store.repository.OrderItemRepository;
 import com.claystore.store.repository.OrderRepository;
 import com.claystore.store.repository.ProductRepository;
 import com.claystore.store.repository.UserRepository;
 import com.claystore.store.request.PlaceOrderRequest;
 import com.claystore.store.response.OrderResponse;
-import com.cloudinary.utils.ObjectUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
