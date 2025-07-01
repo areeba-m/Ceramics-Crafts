@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 const { Option } = Select;
 
 const ProductDetail = () => {
-  const [product, setProduct] = useState("");
+  const [product, setProduct] = useState({});
   const [loading, setloading] = useState(false);
   const { id } = useParams();
  
@@ -21,8 +21,7 @@ const ProductDetail = () => {
     setloading(true);
     try {
       const response = await axios.get(
-        // `${import.meta.env.VITE_BASE_URL}/product/${id}`,
-        `http://localhost:8080/api/products/${id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/products/${id}`,
 
         {
           headers: {
@@ -31,13 +30,16 @@ const ProductDetail = () => {
           },
         }
       );
+      console.log(response)
+
       setloading(false);
 
-      // if (response?.data?.error === false) {
-      //   setProduct(response?.data?.product);
-      // }
+
+      if (response?.data?.error === false) {
+        setProduct(response?.data?.product);
+      }
       if (response?.status === 200) {
-        setProduct(response.data);
+        setProduct(response.data.data);
       }
     } catch (error) {
       const msg = error.response?.data?.message || "Unable to get product.";
@@ -115,7 +117,7 @@ const ProductDetail = () => {
         >
           <motion.img
             // src={product.images[0]}
-            src="https://via.placeholder.com/500"
+            src={product.imageUrl}
             alt={product.name}
             className="w-full h-[500px] object-contain rounded-lg shadow"
             whileHover={{ scale: 1.03 }}
@@ -139,70 +141,20 @@ const ProductDetail = () => {
           </motion.h2>
 
           <div className="text-xl text-[#A37B73] font-semibold mb-2">
-            ${product.price.toFixed(2)}
+            ${product?.price?.toFixed(2)}
           </div>
 
           <p className="mb-2 text-gray-600">
             <span className="font-semibold">Description:</span>{" "}
-            {product.description}
+            {product?.description}
           </p>
           <p className="mb-2 text-gray-600">
             <span className="font-semibold">Material:</span> {product.material}
           </p>
           <p className="mb-6 text-gray-600">
-            <span className="font-semibold">Estimated Delivery:</span> 5–7
+            <span className="font-semibold">Estimated Delivery:</span> 5-7
             business days
           </p>
-
-          {/* Color Select */}
-          <div className="mb-4">
-            <label className="block font-medium text-gray-700 mb-1">
-              Select Color:
-            </label>
-            <Select
-              value={selectedColor}
-              onChange={setSelectedColor}
-              placeholder="Choose a color"
-              className="w-full"
-            >
-              {colors.map((color) => (
-                <Option key={color} value={color}>
-                  {color}
-                </Option>
-              ))}
-            </Select>
-          </div>
-
-          {/* Size Select */}
-          <div className="mb-4">
-            <label className="block font-medium text-gray-700 mb-1">
-              Select Size:
-            </label>
-            <Select
-              value={selectedSize}
-              onChange={setSelectedSize}
-              placeholder="Choose a size"
-              className="w-full"
-            >
-              {sizes.map((size) => (
-                <Option key={size} value={size}>
-                  {size}
-                </Option>
-              ))}
-            </Select>
-          </div>
-
-          {/* Engraving Input */}
-          <div className="mb-6">
-            <label className="block font-medium text-gray-700 mb-1">
-              Text Engraving:
-            </label>
-            <Input
-              value={engravingText}
-              onChange={(e) => setEngravingText(e.target.value)}
-              placeholder="Type your custom engraving here"
-            />
-          </div>
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
