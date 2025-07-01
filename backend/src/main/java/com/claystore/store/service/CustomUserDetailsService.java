@@ -15,7 +15,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    // CHECK THIS
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         com.claystore.store.entity.User user = userRepository.findByEmail(email)
