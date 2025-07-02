@@ -1,5 +1,7 @@
 package com.claystore.store.service;
 
+import com.claystore.store.dto.UserDTO;
+import com.claystore.store.dto.UserSignupDTO;
 import com.claystore.store.entity.User;
 import com.claystore.store.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -20,24 +22,33 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers(){
+        return userRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
-    public Optional<User> getUserById(int id){
-        return userRepository.findById(id);
+    public Optional<UserDTO> getUserById(int id) {
+        return userRepository.findById(id)
+                .map(this::convertToDTO);
     }
 
-    public User signUp(User user){
-        if(userRepository.findByEmail(user.getEmail()).isPresent()){
+    public UserDTO signUp(UserSignupDTO userDTO){
+        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()){
             throw new RuntimeException("Email already registered");
         }
 
-        user.setPassword((passwordEncoder.encode(user.getPassword())));
-        return userRepository.save(user);
+        User user = new User();
+        user.setFullName(userDTO.getFullName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+
+        User saved = userRepository.save(user);
+        return convertToDTO(saved);
     }
 
-    public User authenticate(String email, String password) {
+    public UserDTO authenticate(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -45,10 +56,21 @@ public class UserService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return user;
+        return convertToDTO(user);
     }
 
-    public Optional<User> getUserByEmail(String email){
-        return userRepository.findByEmail(email);
+    public Optional<UserDTO> getUserByEmail(String email){
+        return userRepository.findByEmail(email)
+                .map(this::convertToDTO);
     }
+
+    public UserDTO convertToDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        );
+    }
+
 }

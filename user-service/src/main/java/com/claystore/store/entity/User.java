@@ -17,18 +17,13 @@ public class User {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank(message = "Full name is required")
     @Column(name="full_name", nullable = false)
     private String fullName;
 
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email is required")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Password is required")
     @Column(nullable = false)
-    @Size(min=3, message="Password must be more than 3 characters")
     private String password;
 
     private String phoneNumber;

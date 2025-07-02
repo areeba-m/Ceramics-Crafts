@@ -1,5 +1,7 @@
 package com.claystore.store.controller;
 
+import com.claystore.store.dto.UserDTO;
+import com.claystore.store.dto.UserSignupDTO;
 import com.claystore.store.entity.User;
 import com.claystore.store.request.AuthRequest;
 import com.claystore.store.response.ApiResponse;
@@ -29,10 +31,10 @@ public class UserController {
     }
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody User user){
-        try{
-            User u = userService.signUp(user);
-            return ResponseEntity.ok(new ApiResponse("User registered successfully.", u));
+    public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody UserSignupDTO user){
+        try {
+            UserDTO registeredUser = userService.signUp(user);
+            return ResponseEntity.ok(new ApiResponse("User registered successfully.", registeredUser));
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -42,25 +44,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Could not sign up.", e.getMessage()));
         }
-
     }
 
     @PostMapping("/auth/login")
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody AuthRequest request, HttpServletResponse response) {
         try{
-            User user = userService.authenticate(request.getEmail(), request.getPassword());
+            UserDTO user = userService.authenticate(request.getEmail(), request.getPassword());
             String token = jwtUtil.generateToken(user.getEmail());
-//            ResponseCookie cookie = ResponseCookie.from("jwt", token)
-//                    .httpOnly(true)
-//                    .secure(false) // set to false for development
-//                    .path("/")
-//                    .maxAge(jwtUtil.getJwtExpirationMs() / 1000)
-//                    .sameSite("Strict")
-//                    .build();
-//
-//            response.setHeader("Set-Cookie", cookie.toString());
             return ResponseEntity
-                    .ok(new ApiResponse("Login successful.",new AuthResponse(token)));
+                    .ok(new ApiResponse("Login successful.", new AuthResponse(token, user.getId())));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse("Login failed.", e.getMessage()));
@@ -70,50 +62,19 @@ public class UserController {
 
     @PostMapping("/auth/logout")
     public ResponseEntity<ApiResponse> logout(HttpServletResponse response) {
-//        ResponseCookie cookie = ResponseCookie.from("jwt", "")
-//                .httpOnly(true)
-//                .secure(false)
-//                .path("/")
-//                .maxAge(0) // expire immediately
-//                .sameSite("Strict")
-//                .build();
-//
-//        response.setHeader("Set-Cookie", cookie.toString());
         return ResponseEntity.ok(new ApiResponse("Logged out successfully.", null));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getUserById(@PathVariable int id){
-        try{
-            Optional<User> optionalUser = userService.getUserById(id);
-            if(optionalUser.isPresent()){
-                User u = optionalUser.get();
-                return ResponseEntity.ok(
-                        new ApiResponse("User found.", u));
-            }
-            else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponse("User with ID not found.",optionalUser));
-            }
-
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("Error fetching user.", e.getMessage()));
-        }
-
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse> getAllUsers(){
-        try{
-            List<User> users = userService.getAllUsers();
-            return ResponseEntity.ok(
-                    new ApiResponse("Successfully fetched all users.", users));
-
-        } catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("Error fetching users.", e.getMessage()));
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
+        Optional<UserDTO> userOpt = userService.getUserById(id);
+        return userOpt.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
 

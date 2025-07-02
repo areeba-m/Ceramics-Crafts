@@ -1,6 +1,5 @@
-package com.claystore.store.entity;
+package com.claystore.store.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -8,29 +7,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class User {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+@NoArgsConstructor
+public class UserSignupDTO {
+
     private int id;
 
     @NotBlank(message = "Full name is required")
-    @Column(name="full_name", nullable = false)
     private String fullName;
 
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
-    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Column(nullable = false)
-    @Size(min=3, message="Password must be more than 3 characters")
+    @Size(min = 3, message = "Password must be more than 3 characters")
     private String password;
 
     private String phoneNumber;
-
 }

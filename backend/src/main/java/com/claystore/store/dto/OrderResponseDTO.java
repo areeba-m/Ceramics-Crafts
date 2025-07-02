@@ -1,6 +1,5 @@
-package com.claystore.store.response;
+package com.claystore.store.dto;
 
-import com.claystore.store.dto.OrderItemDetailDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderResponse {
+public class OrderResponseDTO {
 
     private int orderId;
     private int userId;

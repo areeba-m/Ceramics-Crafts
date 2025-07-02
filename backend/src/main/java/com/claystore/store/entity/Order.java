@@ -20,9 +20,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId; // removed user reference
 
     private String name;
     private String address;
