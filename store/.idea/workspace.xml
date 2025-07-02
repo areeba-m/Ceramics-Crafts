@@ -5,18 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="172b0683-3eab-46f4-a939-14bde95c7222" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/feignclient/UserClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/claystore/store/service/ProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/CustomUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/CustomUserDetailsService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/OrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/OrderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/ProductService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/ProductService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -28,6 +38,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -65,6 +80,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.ProductServiceApplication.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found": "Database connection parameters found",
     "Notification.DoNotAsk-DatabaseConfigFileWatcher.found": "true",
@@ -74,8 +90,11 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.CustomizedProductServiceApplication.executor": "Run",
+    "Spring Boot.ProductServiceApplication.executor": "Run",
     "Spring Boot.StoreApplication.executor": "Run",
-    "git-widget-placeholder": "main",
+    "Spring Boot.UserServiceApplication.executor": "Run",
+    "git-widget-placeholder": "create-microservices",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -84,6 +103,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
     "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors",
     "settings.editor.splitter.proportion": "0.25996014",
     "vue.rearranger.settings.migration": "true"
@@ -99,7 +119,44 @@
       <recent name="D:\reeby\Netsol\clay-store\store\src\main\java\com\claystore\store\configuration" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="user-service" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="user-service" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="CustomizedProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="customized-product-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.claystore.store.CustomizedProductServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="product-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.claystore.store.ProductServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="StoreApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="backend" />
@@ -108,6 +165,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="UserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="user-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.claystore.store.UserServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ProductServiceApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -137,12 +207,26 @@
       <workItem from="1750847227177" duration="1888000" />
       <workItem from="1751003785080" duration="17620000" />
       <workItem from="1751264505378" duration="16470000" />
-      <workItem from="1751349455231" duration="14659000" />
+      <workItem from="1751349455231" duration="17067000" />
+      <workItem from="1751373336021" duration="277000" />
+      <workItem from="1751373644281" duration="719000" />
+      <workItem from="1751436195224" duration="4060000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
