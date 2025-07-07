@@ -8,6 +8,8 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { useCart } from "../context/CartContext";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 
@@ -15,7 +17,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState({});
   const [loading, setloading] = useState(false);
   const { id } = useParams();
- 
+  const {addToCart} = useCart()
 
   const getProductByID = async () => {
     setloading(true);
@@ -43,7 +45,7 @@ const ProductDetail = () => {
       }
     } catch (error) {
       const msg = error.response?.data?.message || "Unable to get product.";
-      console.log("Error getting product:", error);
+      console.log("Error getting product:", error, msg);
       setloading(false);
     }
   };
@@ -52,20 +54,22 @@ const ProductDetail = () => {
     getProductByID();
   }, []);
 
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedSize, setSelectedSize] = useState("");
-  const [engravingText, setEngravingText] = useState("");
-
   const handleAddToCart = () => {
+    addToCart(product)
+    toast.success(`${product.name} added to cart!`, {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                // transition: Bounce,
+              });
     message.success("Added to cart!");
   };
 
-  const handleBuyNow = () => {
-    message.info("Proceeding to checkout...");
-  };
-
-  const colors = ["Beige", "Brown", "Clay", "Ivory"];
-  const sizes = ["Small", "Medium", "Large"];
 
   if (loading) {
     return (
@@ -145,8 +149,17 @@ const ProductDetail = () => {
           </div>
 
           <p className="mb-2 text-gray-600">
-            <span className="font-semibold">Description:</span>{" "}
-            {product?.description}
+            <span className="font-semibold pr-1">Description:</span>
+          <span 
+              className="text-gray-600 whitespace-pre-wrap break-words"
+              style={{
+                maxHeight: '200px',
+                overflowY: 'auto',
+                paddingRight: '8px'
+              }}
+            >
+              {product?.description}
+            </span>
           </p>
           <p className="mb-2 text-gray-600">
             <span className="font-semibold">Material:</span> {product.material}
@@ -170,21 +183,6 @@ const ProductDetail = () => {
                 onClick={handleAddToCart}
               >
                 Add to Cart
-              </Button>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full"
-            >
-              <Button
-                type="default"
-                icon={<CreditCardOutlined />}
-                className="border-[#A37B73] text-[#A37B73] hover:bg-[#FFE4C4] w-full"
-                onClick={handleBuyNow}
-              >
-                Buy Now
               </Button>
             </motion.div>
           </div>

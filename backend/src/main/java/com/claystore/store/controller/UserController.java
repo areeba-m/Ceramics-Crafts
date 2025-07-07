@@ -32,7 +32,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> signUp(@Valid @RequestBody User user){
         try{
             User u = userService.signUp(user);
-            return ResponseEntity.ok(new ApiResponse("User registered successfully.", u));
+            String token = jwtUtil.generateToken(user.getEmail());
+            return ResponseEntity.ok(new ApiResponse("User registered successfully.", new AuthResponse(token, u.getId())));
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
@@ -60,7 +61,7 @@ public class UserController {
 //
 //            response.setHeader("Set-Cookie", cookie.toString());
             return ResponseEntity
-                    .ok(new ApiResponse("Login successful.",new AuthResponse(token)));
+                    .ok(new ApiResponse("Login successful.",new AuthResponse(token, user.getId())));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse("Login failed.", e.getMessage()));

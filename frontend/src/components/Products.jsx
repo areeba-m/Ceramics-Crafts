@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Slider, Checkbox, Select, Spin } from "antd";
+import { Card, Row, Col, Slider, Checkbox, Select, Spin, Empty, Button } from "antd";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,11 +55,9 @@ const Products = () => {
     dispatch(fetchedProducts());
   }, [dispatch]);
 
-  // Extract unique filter options from products
   const materials = [...new Set(products.map(p => p.material).filter(Boolean))];
   const sizes = [...new Set(products.map(p => p.size).filter(Boolean))];
 
-  // Filter products based on selected filters
   const filteredProducts = products.filter((product) => {
     return (
       product.price >= priceRange[0] &&
@@ -102,7 +100,6 @@ const Products = () => {
       </motion.h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Filters Section */}
         <motion.div
           className="w-full lg:w-1/4 p-6 rounded-lg shadow"
           style={{ backgroundColor: "#F7E7CE" }}
@@ -164,47 +161,79 @@ const Products = () => {
           initial="hidden"
           animate="show"
         >
-          <Row gutter={[16, 24]}>
-            {filteredProducts.map((product) => (
-              <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
-                <motion.div variants={itemVariants}>
-                  <Link to={`/product-detail/${product.id}`}>
-                    <motion.div
-                      whileHover={{ y: -5, scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Card
-                        hoverable
-                        style={{ backgroundColor: "#FFE4C4" }}
-                        cover={
-                          <motion.img
-                            alt={product.name}
-                            src={product.imageUrl}
-                            className="h-48 w-full object-cover"
-                            whileHover={{ scale: 1.05 }}
-                          />
-                        }
+          {filteredProducts.length > 0 ? (
+            <Row gutter={[16, 24]}>
+              {filteredProducts.map((product) => (
+                <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
+                  <motion.div variants={itemVariants}>
+                    <Link to={`/product-detail/${product.id}`}>
+                      <motion.div
+                        whileHover={{ y: -5, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
-                        <Meta
-                          title={product.name}
-                          description={
-                            <>
-                              <div className="text-lg font-semibold text-[#A37B73]">
-                                ${product.price.toFixed(2)}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {product.material} • {product.size}"
-                              </div>
-                            </>
+                        <Card
+                          hoverable
+                          style={{ backgroundColor: "#FFE4C4" }}
+                          cover={
+                            <motion.img
+                              alt={product.name}
+                              src={product.imageUrl}
+                              className="h-48 w-full object-cover"
+                              whileHover={{ scale: 1.05 }}
+                            />
                           }
-                        />
-                      </Card>
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
+                        >
+                          <Meta
+                            title={product.name}
+                            description={
+                              <>
+                                <div className="text-lg font-semibold text-[#A37B73]">
+                                  ${product.price.toFixed(2)}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                  {product.material} • {product.size}"
+                                </div>
+                              </>
+                            }
+                          />
+                        </Card>
+                      </motion.div>
+                    </Link>
+                  </motion.div>
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-96">
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <span className="text-lg">
+                    {products.length === 0 
+                      ? "No products available" 
+                      : "No products match your filters"}
+                  </span>
+                }
+              >
+                {products.length === 0 ? (
+                  <Button type="primary" onClick={() => dispatch(fetchedProducts())}>
+                    Refresh Products
+                  </Button>
+                ) : (
+                  <Button 
+                    type="primary" 
+                    onClick={() => {
+                      setPriceRange([0, 100]);
+                      setSelectedMaterials([]);
+                      setSelectedSizes([]);
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
+              </Empty>
+            </div>
+          )}
         </motion.div>
       </div>
     </motion.div>

@@ -1,39 +1,14 @@
 import React from "react";
-import { Button } from "antd";
+import { Button, InputNumber } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useCart } from "../context/CartContext";
 
 const Cart = () => {
-  const dummyCartItems = [
-    {
-      id: "1",
-      name: "Stylish Ring",
-      image: "https://via.placeholder.com/100",
-      price: 50,
-      color: "Gold",
-      size: "M",
-      engravingText: "Love U 💍",
-    },
-    {
-      id: "2",
-      name: "Elegant Necklace",
-      image: "https://via.placeholder.com/100",
-      price: 80,
-      color: "Silver",
-      size: "L",
-      engravingText: "",
-    },
-  ];
+  const { cartItems, updateQuantity, removeFromCart, clearCart, cartTotal } =
+    useCart();
   const navigate = useNavigate();
-
-  if (dummyCartItems.length > 0) {
-    navigate("/checkout");
-  } else {
-    alert("Your cart is empty.");
-  }
-
-  const totalPrice = dummyCartItems.reduce((acc, item) => acc + item.price, 0);
 
   return (
     <motion.div
@@ -67,75 +42,87 @@ const Cart = () => {
         </h1>
       </motion.div>
 
-      {dummyCartItems.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="text-center text-gray-500"
-        >
-          Your cart is empty.
+      {cartItems.length === 0 ? (
+        <motion.div className="text-center py-10">
+          <p className="text-lg text-gray-500 mb-4">Your cart is empty</p>
+          <Link to="/" className="text-[#A37B73] hover:underline">
+            Continue Shopping
+          </Link>
         </motion.div>
       ) : (
         <>
           <div className="space-y-6">
-            {dummyCartItems.map((item, i) => (
+            {cartItems.map((item) => (
               <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
+                key={`${item.id}-${item.color}-${item.size}`}
                 className="flex flex-col sm:flex-row items-center bg-[#FFF7ED] p-4 rounded-lg shadow-sm border border-[#f5d7c4]"
               >
                 <img
-                  src={item.image}
+                  src={item.imageUrl}
                   alt={item.name}
                   className="w-24 h-24 object-cover rounded-md mr-4"
                 />
-                <div className="flex-1 w-full sm:w-auto">
+                <div className="flex-1">
                   <h2 className="text-lg font-semibold text-[#A37B73]">
                     {item.name}
                   </h2>
-                  <p className="text-sm text-gray-600">Color: {item.color}</p>
-                  <p className="text-sm text-gray-600">Size: {item.size}</p>
-                  {item.engravingText && (
-                    <p className="text-sm text-gray-600 italic">
-                      Engraving: “{item.engravingText}”
-                    </p>
-                  )}
+                  {item.material && <p>Material: {item.material}</p>}
+                  {item.size && <p>Size: {item.size}</p>}
                 </div>
-                <div className="mt-4 sm:mt-0 text-right">
-                  <div className="text-xl font-semibold text-[#A37B73]">
-                    ${item.price.toFixed(2)}
+                <div className="flex items-center gap-4 mt-4 sm:mt-0">
+                  <InputNumber
+                    min={1}
+                    value={item.quantity}
+                    onChange={(value) => {
+                      if (value < 1) {
+                        updateQuantity(item.id, 1); // Prevent 0 or below
+                      } else {
+                        updateQuantity(item.id, value); // ✅ Allow increment
+                      }
+                    }}
+                  />
+                  <div className="text-right min-w-[100px]">
+                    <div className="text-xl font-semibold text-[#A37B73]">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </div>
+                    <Button
+                      danger
+                      size="small"
+                      onClick={() =>
+                        removeFromCart(item.id, item.color, item.size)
+                      }
+                    >
+                      Remove
+                    </Button>
                   </div>
-                  <Button danger size="small" className="mt-2">
-                    Remove
-                  </Button>
                 </div>
               </motion.div>
             ))}
           </div>
 
-          {/* Total & Checkout */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4"
-          >
-            <h3 className="text-2xl font-bold text-[#A37B73]">
-              Total: ${totalPrice.toFixed(2)}
-            </h3>
-            <div className="flex gap-4">
-              <Button danger>Clear Cart</Button>
-              <Link
-                to="/checkout"
-                className="inline-block bg-amber-600 border border-amber-600 text-white px-1 py-1 rounded-md hover:bg-amber-700 hover:border-amber-700 transition"
-              >
-                Proceed to Checkout
-              </Link>
+          {/* Total & Checkout - keep your existing code but use real values */}
+          <div className="mt-10">
+            <div className=" text-xl font-bold mb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center justify-center gap-3">
+                  <span>Subtotal:</span>
+                  <span>${cartTotal.toFixed(2)}</span>
+                </div>
+
+                <div className="mt-4 text-right">
+                  <Button danger onClick={clearCart}>
+                    Clear Cart
+                  </Button>
+                </div>
+              </div>
             </div>
-          </motion.div>
+            <Link
+              to="/checkout"
+              className="block w-full text-center bg-[#A37B73] text-white py-2 rounded hover:bg-[#8e635e] transition"
+            >
+              Proceed to Checkout
+            </Link>
+          </div>
         </>
       )}
     </motion.div>

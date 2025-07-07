@@ -33,4 +33,13 @@ public class User {
 
     private String phoneNumber;
 
+//    public int getId() {
+//        return this.id;
+//    }
+//
+//    // Explicitly add setter if needed
+//    public void setId(int id) {
+//        this.id = id;
+//    }
+
 }

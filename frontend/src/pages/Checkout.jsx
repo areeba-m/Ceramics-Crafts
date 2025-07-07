@@ -1,8 +1,77 @@
 import { motion } from "framer-motion";
-import { Link, Links } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Button, Form, Input } from "antd";
+import { useCart } from "../context/CartContext";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 const Checkout = () => {
+  const { cartItems, clearCart, cartTotal } = useCart();
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const onFinish = async (values) => {
+    try {
+      setLoading(true);
+      
+      // Prepare order data in the required format
+      const orderData = {
+        items: cartItems.map(item => ({
+          productId: item.id,
+          quantity: item.quantity
+        })),
+        userId: parseInt(localStorage.getItem("userId")),
+        name: values.fullName,
+        address: values.address,
+        city: values.city,
+        phoneNumber: values.phoneNumber
+      };
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/orders/placeOrder`,
+        orderData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Order placed successfully!", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        clearCart();
+        navigate("/order-confirmation");
+      }
+    } catch (error) {
+      console.error("Order placement error:", error);
+      toast.error(error.response?.data?.message || "Failed to place order", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* Top Navigation */}
@@ -33,47 +102,96 @@ const Checkout = () => {
       >
         {/* Shipping Form */}
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-[#A37B73]">Shipping Information</h2>
-          <form className="space-y-4">
-            {["Full Name", "Address", "City", "Postal Code", "Phone Number"].map((placeholder, i) => (
-              <input
-                key={i}
-                type="text"
-                placeholder={placeholder}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#A37B73] text-sm sm:text-base"
-              />
-            ))}
-
-            <Link
-            to="/order-confirmation"
-              type="button"
-              className="w-full mt-4 px-4 bg-[#A37B73] text-white py-2 rounded-md hover:bg-[#8e635e] transition text-sm sm:text-base"
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-[#A37B73]">
+            Shipping Information
+          </h2>
+          <Form
+            form={form}
+            onFinish={onFinish}
+            layout="vertical"
+            className="space-y-4"
+          >
+            <Form.Item
+              name="fullName"
+              label="Full Name"
+              rules={[
+                { required: true, message: "Please enter your full name" }
+              ]}
             >
-              Place Order
-            </Link>
-          </form>
+              <Input placeholder="Full Name" />
+            </Form.Item>
+
+            <Form.Item
+              name="address"
+              label="Address"
+              rules={[
+                { required: true, message: "Please enter your address" }
+              ]}
+            >
+              <Input.TextArea placeholder="Address" rows={3} />
+            </Form.Item>
+
+            <Form.Item
+              name="city"
+              label="City"
+              rules={[
+                { required: true, message: "Please enter your city" }
+              ]}
+            >
+              <Input placeholder="City" />
+            </Form.Item>
+
+            <Form.Item
+              name="phoneNumber"
+              label="Phone Number"
+              rules={[
+                { required: true, message: "Please enter your phone number" }
+              ]}
+            >
+              <Input placeholder="Phone Number" />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                className="w-full mt-4 px-4 bg-[#A37B73] text-white py-2 rounded-md hover:bg-[#8e635e] transition text-sm sm:text-base"
+              >
+                Place Order
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
 
         {/* Order Summary */}
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-[#A37B73]">Order Summary</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-6 text-[#A37B73]">
+            Order Summary
+          </h2>
           <div className="space-y-4">
-            {[
-              { name: "Sample Product", qty: 2, price: 39.98 },
-              { name: "Another Product", qty: 1, price: 24.99 },
-            ].map((item, idx) => (
-              <div key={idx} className="flex justify-between border-b pb-2">
+            {cartItems.map((item) => (
+              <div
+                key={`${item.id}-${item.quantity}`}
+                className="flex justify-between border-b pb-2"
+              >
                 <div>
-                  <p className="font-medium text-sm sm:text-base">{item.name}</p>
-                  <p className="text-xs sm:text-sm text-gray-500">Qty: {item.qty}</p>
+                  <p className="font-medium text-sm sm:text-base">
+                    {item.name}
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    Qty: {item.quantity}
+                  </p>
                 </div>
-                <p className="font-semibold text-sm sm:text-base">${item.price.toFixed(2)}</p>
+                <p className="font-semibold text-sm sm:text-base">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </p>
               </div>
             ))}
 
             <div className="flex justify-between pt-4 border-t mt-4 text-base sm:text-lg font-semibold">
               <p>Total</p>
-              <p>$64.97</p>
+              <p>${cartTotal.toFixed(2)}</p>
             </div>
           </div>
         </div>

@@ -8,17 +8,14 @@ import { toast } from "react-toastify";
 const { TextArea } = Input;
 
 const CustomizedProduct = () => {
-  // Form and state management
   const [form] = Form.useForm();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // Product customization options
   const [selectedShape, setSelectedShape] = useState("vase");
   const [selectedColor, setSelectedColor] = useState("#D8BFAA");
-  const [imageFile, setImageFile] = useState(null); // Stores the actual File object
+  const [imageFile, setImageFile] = useState(null);
 
-  // Product options data
   const colorOptions = [
     { name: "Clay Beige", value: "#D8BFAA" },
     { name: "Warm Terracotta", value: "#A37B73" },
@@ -39,23 +36,21 @@ const CustomizedProduct = () => {
     setLoading(true);
 
     try {
-      // const formData = new FormData();
-      const selectedColorObj = colorOptions.find(
-        (c) => c.value === selectedColor
-      );
+      const formValues = form.getFieldsValue(true);
+      const selectedColorObj = colorOptions.find((c) => c.value === selectedColor);
 
-      // Prepare product data object
       const productData = {
         shape: selectedShape,
         color: selectedColorObj?.name || selectedColor,
-        texture: values.texture || "Smooth", // Default texture if not selected
-        size: Number(values.size) || 8, // Convert to number with default
-        specialFeature: Array.isArray(values.features) ? values.features.join(", ") : "",
-        instruction: values.instructions || "No special instructions",
-        email: values.email,
+        texture: formValues.texture || "Smooth",
+        size: Number(formValues.size) || 8,
+        specialFeature: Array.isArray(formValues.features) 
+          ? formValues.features.join(", ") 
+          : "",
+        instruction: formValues.instructions || "No special instructions",
+        email: formValues.email,
       };
 
-      // Create FormData only if we have an image
       const formData = new FormData();
       formData.append(
         "product",
@@ -68,7 +63,6 @@ const CustomizedProduct = () => {
         formData.append("image", imageFile);
       }
 
-      // Submit to backend
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/products/customized`,
         formData,
@@ -77,35 +71,16 @@ const CustomizedProduct = () => {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          transformRequest: (data) => data,
         }
       );
 
       if (response.data.message === "Successfully added a product.") {
-        toast.success("Your custom order has been placed!", {
-          position: "bottom-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.success("Your custom order has been placed!");
         setCurrentStep(4);
       }
     } catch (error) {
       console.error("Order submission error:", error);
-      toast.error(error.response?.data?.message || "Failed to submit order", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error(error.response?.data?.message || "Failed to submit order");
     } finally {
       setLoading(false);
     }
@@ -115,32 +90,19 @@ const CustomizedProduct = () => {
     beforeUpload: (file) => {
       const isImage = file.type.startsWith("image/");
       if (!isImage) {
-        toast.error("You can only upload image files!", {
-          position: "bottom-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("You can only upload image files!");
         return false;
       }
       setImageFile(file);
-      return false; // Prevent automatic upload
+      return false;
     },
     showUploadList: false,
     accept: "image/*",
   };
 
-  // Navigation functions
   const nextStep = () => setCurrentStep(currentStep + 1);
   const prevStep = () => setCurrentStep(currentStep - 1);
 
-  /**
-   * Renders the appropriate step content based on currentStep
-   */
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -229,8 +191,19 @@ const CustomizedProduct = () => {
               Customize Details
             </h2>
 
-            <Form form={form} layout="vertical" className="max-w-2xl mx-auto">
+            <Form 
+              form={form} 
+              layout="vertical" 
+              className="max-w-2xl mx-auto"
+              initialValues={{
+                texture: "Smooth", // Default value for texture
+                features: [], // Default empty array for features
+                size: 8 // Default size
+              }}
+            >
               <Form.Item
+                label="Size (inches)"
+                name="size"
                 rules={[
                   { required: true, message: "Please select size!" },
                   {
@@ -239,21 +212,18 @@ const CustomizedProduct = () => {
                     message: "Size must be at least 1",
                   },
                 ]}
-                label="Size (inches)"
-                name="size"
               >
                 <Slider
                   min={4}
                   max={20}
-                  defaultValue={8}
                   marks={{ 4: '4"', 12: '12"', 20: '20"' }}
                 />
               </Form.Item>
 
               <Form.Item
-                rules={[{ required: true, message: "Please select texture!" }]}
                 label="Texture"
                 name="texture"
+                rules={[{ required: true, message: "Please select texture!" }]}
               >
                 <Radio.Group>
                   <div className="grid grid-cols-2 gap-4">
@@ -266,7 +236,10 @@ const CustomizedProduct = () => {
                 </Radio.Group>
               </Form.Item>
 
-              <Form.Item label="Special Features" name="features">
+              <Form.Item 
+                label="Special Features" 
+                name="features"
+              >
                 <Checkbox.Group>
                   <div className="grid grid-cols-2 gap-4">
                     <Checkbox value="glossy">Glossy Finish</Checkbox>
@@ -349,30 +322,20 @@ const CustomizedProduct = () => {
                   <div className="space-y-3">
                     <p>
                       <span className="font-semibold">Shape:</span>{" "}
-                      {
-                        shapeOptions.find((s) => s.value === selectedShape)
-                          ?.label
-                      }
+                      {shapeOptions.find((s) => s.value === selectedShape)?.label}
                     </p>
                     <p>
                       <span className="font-semibold">Color:</span>{" "}
-                      {
-                        colorOptions.find((c) => c.value === selectedColor)
-                          ?.name
-                      }
+                      {colorOptions.find((c) => c.value === selectedColor)?.name}
                     </p>
-                    {form.getFieldValue("size") && (
-                      <p>
-                        <span className="font-semibold">Size:</span>{" "}
-                        {form.getFieldValue("size")} inches
-                      </p>
-                    )}
-                    {form.getFieldValue("texture") && (
-                      <p>
-                        <span className="font-semibold">Texture:</span>{" "}
-                        {form.getFieldValue("texture")}
-                      </p>
-                    )}
+                    <p>
+                      <span className="font-semibold">Size:</span>{" "}
+                      {form.getFieldValue("size")} inches
+                    </p>
+                    <p>
+                      <span className="font-semibold">Texture:</span>{" "}
+                      {form.getFieldValue("texture")}
+                    </p>
                     {form.getFieldValue("features")?.length > 0 && (
                       <p>
                         <span className="font-semibold">Features:</span>{" "}

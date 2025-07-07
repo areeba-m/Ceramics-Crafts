@@ -11,7 +11,7 @@ import Home from "./pages/Home";
 import CeramicAuthPage from "./pages/CeramicAuthPage";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
-import Checkout from "./pages/CheckOut";
+import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/Notfound";
@@ -24,7 +24,7 @@ import Footer from "./components/Footer";
 
 
 const App = () => {
-  const locomotiveScroll = new LocomotiveScroll();
+  // const locomotiveScroll = new LocomotiveScroll();
   const location = useLocation();
 
   return (
