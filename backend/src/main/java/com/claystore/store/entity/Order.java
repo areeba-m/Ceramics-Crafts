@@ -21,7 +21,7 @@ public class Order {
     private int id;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId; // removed user reference
+    private int userId;
 
     private String name;
     private String address;

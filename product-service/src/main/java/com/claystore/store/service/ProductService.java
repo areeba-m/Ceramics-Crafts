@@ -1,5 +1,9 @@
 package com.claystore.store.service;
 
+import com.claystore.commonsecurity.exception.InvalidMediaUploadException;
+import com.claystore.commonsecurity.exception.MediaUploadException;
+import com.claystore.commonsecurity.exception.ResourceNotFoundException;
+import com.claystore.store.dto.ProductDTO;
 import com.claystore.store.entity.Product;
 import com.claystore.store.repository.ProductRepository;
 import com.cloudinary.Cloudinary;
@@ -22,20 +26,23 @@ public class ProductService {
         this.cloudinary = cloudinary;
     }
 
-    public List<Product> getAllProducts(){
-        return repository.findAll();
+    public List<ProductDTO> getAllProducts(){
+        return repository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
-    public Optional<Product> getProductById(int id){
-        return repository.findById(id);
+    public Optional<ProductDTO> getProductById(int id){
+        return repository.findById(id)
+                .map(this::convertToDTO);
     }
 
-    public Product saveProduct(Product product, MultipartFile image){
+    public ProductDTO saveProduct(ProductDTO productDTO, MultipartFile image){
         try {
             if (image != null && !image.isEmpty()) {
                 String contentType = image.getContentType();
                 if (!isImage(contentType)) {
-                    throw new IllegalArgumentException("Only image files are allowed (JPEG, PNG, GIF, etc.)");
+                    throw new InvalidMediaUploadException("Only image files are allowed (JPEG, PNG, GIF, etc.)");
                 }
 
                 Map uploadResult = cloudinary.uploader().upload(
@@ -44,19 +51,30 @@ public class ProductService {
                 );
                 String imageUrl = (String) uploadResult.get("secure_url");
                 String publicId = (String) uploadResult.get("public_id");
-                product.setImageUrl(imageUrl);
-                product.setCloudinaryPublicId(publicId);
+                productDTO.setImageUrl(imageUrl);
+                productDTO.setCloudinaryPublicId(publicId);
             }
 
-            return repository.save(product);
+            Product product = new Product();
+            product.setName(productDTO.getName());
+            product.setDescription(productDTO.getDescription());
+            product.setMaterial(productDTO.getMaterial());
+            product.setSize(productDTO.getSize());
+            product.setPrice(productDTO.getPrice());
+            product.setImageUrl(productDTO.getImageUrl());
+            product.setCloudinaryPublicId(productDTO.getCloudinaryPublicId());
+
+            Product saved = repository.save(product);
+            return convertToDTO(saved);
+
         } catch (Exception e) {
-            throw new RuntimeException("Image upload failed: " + e.getMessage());
+            throw new MediaUploadException("Image upload failed: " + e.getMessage());
         }
     }
 
-    public Product updateProduct(int id, Product newProduct, MultipartFile image) {
+    public ProductDTO updateProduct(int id, ProductDTO newProduct, MultipartFile image) {
         Product existingProduct = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         existingProduct.setName(newProduct.getName());
         existingProduct.setDescription(newProduct.getDescription());
@@ -68,7 +86,7 @@ public class ProductService {
         if (image != null && !image.isEmpty()) {
             String contentType = image.getContentType();
             if (!isImage(contentType)) {
-                throw new IllegalArgumentException("Only image files are allowed (JPEG, PNG, GIF, etc.)");
+                throw new InvalidMediaUploadException("Only image files are allowed (JPEG, PNG, GIF, etc.)");
             }
 
             try {
@@ -78,16 +96,17 @@ public class ProductService {
                 existingProduct.setImageUrl(imageUrl);
                 existingProduct.setCloudinaryPublicId(publicId);
             } catch (Exception e) {
-                throw new RuntimeException("Image upload failed: " + e.getMessage());
+                throw new MediaUploadException("Image upload failed: " + e.getMessage());
             }
         }
 
-        return repository.save(existingProduct);
+        Product updatedProduct = repository.save(existingProduct);
+        return convertToDTO(updatedProduct);
     }
 
     public void deleteProduct(int id) {
         Product product = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         // delete from cloudinary
         try {
@@ -95,7 +114,7 @@ public class ProductService {
                 cloudinary.uploader().destroy(product.getCloudinaryPublicId(), ObjectUtils.emptyMap());
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to delete image from Cloudinary: " + e.getMessage());
+            throw new MediaUploadException("Failed to delete image from Cloudinary: " + e.getMessage());
         }
 
         repository.deleteById(id);
@@ -111,5 +130,17 @@ public class ProductService {
         );
     }
 
+    private ProductDTO convertToDTO(Product product){
+        return new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getMaterial(),
+                product.getSize(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCloudinaryPublicId()
+        );
+    }
 
 }

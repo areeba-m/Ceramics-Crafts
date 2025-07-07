@@ -1,5 +1,6 @@
 package com.claystore.store.service;
 
+import com.claystore.commonsecurity.exception.ResourceNotFoundException;
 import com.claystore.store.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         com.claystore.store.entity.User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new UsernameNotFoundException("User not found."));
+                .orElseThrow(()-> new ResourceNotFoundException("User not found."));
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())

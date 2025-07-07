@@ -1,5 +1,8 @@
 package com.claystore.store.service;
 
+import com.claystore.commonsecurity.exception.AlreadyExistsException;
+import com.claystore.commonsecurity.exception.InvalidCredentialsException;
+import com.claystore.commonsecurity.exception.ResourceNotFoundException;
 import com.claystore.store.dto.UserDTO;
 import com.claystore.store.dto.UserSignupDTO;
 import com.claystore.store.entity.User;
@@ -35,7 +38,7 @@ public class UserService {
 
     public UserDTO signUp(UserSignupDTO userDTO){
         if(userRepository.findByEmail(userDTO.getEmail()).isPresent()){
-            throw new RuntimeException("Email already registered");
+            throw new AlreadyExistsException("Email already registered");
         }
 
         User user = new User();
@@ -50,10 +53,10 @@ public class UserService {
 
     public UserDTO authenticate(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
 
         return convertToDTO(user);
@@ -64,7 +67,7 @@ public class UserService {
                 .map(this::convertToDTO);
     }
 
-    public UserDTO convertToDTO(User user) {
+    private UserDTO convertToDTO(User user) {
         return new UserDTO(
                 user.getId(),
                 user.getFullName(),
