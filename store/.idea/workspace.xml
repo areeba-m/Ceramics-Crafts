@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="172b0683-3eab-46f4-a939-14bde95c7222" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/OrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/controller/OrderController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/OrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/target/classes/com/claystore/store/service/OrderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../customized-product-service/target/classes/com/claystore/store/controller/CustomizedProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../customized-product-service/target/classes/com/claystore/store/controller/CustomizedProductController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../customized-product-service/target/classes/com/claystore/store/service/CustomizedProductService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../customized-product-service/target/classes/com/claystore/store/service/CustomizedProductService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../product-service/target/classes/com/claystore/store/controller/ProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/target/classes/com/claystore/store/controller/ProductController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../product-service/target/classes/com/claystore/store/service/ProductService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/target/classes/com/claystore/store/service/ProductService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/claystore/store/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/claystore/store/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/claystore/store/service/CustomUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/claystore/store/service/CustomUserDetailsService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-service/target/classes/com/claystore/store/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../user-service/target/classes/com/claystore/store/service/UserService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
