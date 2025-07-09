@@ -94,7 +94,7 @@ const CeramicAuthPage = () => {
 
         if (response.status === 200) {
           localStorage.setItem("token", response?.data?.data?.token);
-          localStorage.setItem("userId", response?.data?.data?.id);
+          localStorage.setItem("userId", response?.data?.data?.userId);
           navigate("/");
           toast.success("Logged in", {
             position: "bottom-right",

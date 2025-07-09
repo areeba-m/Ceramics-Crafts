@@ -64,7 +64,7 @@ const CustomizedProduct = () => {
       }
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/products/customized`,
+        `${import.meta.env.VITE_CUST_PRODUCTS_URL}/api/products/customized`,
         formData,
         {
           headers: {

@@ -23,7 +23,7 @@ const ProductDetail = () => {
     setloading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/products/${id}`,
+        `${import.meta.env.VITE_PRODUCTS_URL}/api/products/${id}`,
 
         {
           headers: {

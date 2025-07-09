@@ -24,7 +24,7 @@ export const UserProvider = ({ children }) => {
         }
 
         const response = await axios.get(
-          `http://localhost:8080/api/users/${userId}`,
+          `http://localhost:8081/api/users/${userId}`,
           {
             headers: {
               "Content-Type": "application/json",

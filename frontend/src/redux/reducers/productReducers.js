@@ -6,7 +6,7 @@ export const fetchedProducts = createAsyncThunk(
   async () => {
     try {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/products`,
+        `${import.meta.env.VITE_PRODUCTS_URL}/api/products`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

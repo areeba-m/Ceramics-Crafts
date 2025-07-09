@@ -31,7 +31,7 @@ const Checkout = () => {
       };
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/orders/placeOrder`,
+        `${import.meta.env.VITE_ORDERS_URL}/api/orders/placeOrder`,
         orderData,
         {
           headers: {
@@ -57,6 +57,7 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error("Order placement error:", error);
+      console.error("Order placement error:", error.response?.data?.data);
       toast.error(error.response?.data?.message || "Failed to place order", {
         position: "bottom-center",
         autoClose: 5000,
