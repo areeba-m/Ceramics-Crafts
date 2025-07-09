@@ -2,11 +2,10 @@ import React from "react";
 import { Carousel } from "antd";
 import { motion } from "framer-motion";
 
-// Clay product images with titles
 const images = [
   {
     id: 1,
-    url: "https://imgs.search.brave.com/aBc8LjoDuKh-ofFHfAqIVYmv0MAtwzRJlS-RSZgtCqs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzcxLzhi/LzMxLzcxOGIzMWFk/MjFjMDU1OGI4NzBi/YmE1NjI0ZjA5NTZh/LmpwZw",
+    url: "https://imgs.search.brave.com/DnmRTDbxBxhR1SpDxh5g_razby5wXtPW1PN9IKJeaQI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/c2h1dHRlcnN0b2Nr/LmNvbS9pbWFnZS1w/aG90by93YXRlci1j/bGF5LXZhc2UtMjYw/bnctNTEzMTkwMDAu/anBn",
     title: "Elegant Clay Vase",
   },
   {

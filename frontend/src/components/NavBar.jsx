@@ -15,7 +15,11 @@ const NavBar = () => {
     { name: "Custom Pieces", id: "custom" },
   ];
 
-  // Animation variants
+  const additionalLinks = [
+    { name: "Profile", path: "/profile" },
+    { name: "Cart", path: "/cart" },
+  ];
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -55,7 +59,6 @@ const NavBar = () => {
         className="bg-[#E6E1DB] rounded-3xl w-full px-6 py-1 sm:px-10 flex items-center justify-between"
         whileHover={{ scale: 1.01 }}
       >
-        {/* Logo - Scrolls to home */}
         <ScrollLink
           to="home"
           smooth={true}
@@ -96,9 +99,9 @@ const NavBar = () => {
                 </ScrollLink>
               </motion.li>
             ))}
-             <motion.li variants={itemVariants}>
+            <motion.li variants={itemVariants}>
               <Link
-              to="/profile"
+                to="/profile"
                 className="text-sm sm:text-[14px] cursor-pointer text-[#A37B73] hover:text-[#D5A496] font-semibold transition-colors"
                 activeClass="text-[#D5A496]"
               >
@@ -107,7 +110,7 @@ const NavBar = () => {
             </motion.li>
             <motion.li variants={itemVariants}>
               <Link
-              to="/cart"
+                to="/cart"
                 className="text-sm sm:text-[14px] cursor-pointer text-[#A37B73] hover:text-[#D5A496] font-semibold transition-colors"
                 activeClass="text-[#D5A496]"
               >
@@ -156,6 +159,17 @@ const NavBar = () => {
                   >
                     {item.name}
                   </ScrollLink>
+                </motion.li>
+              ))}
+              {additionalLinks.map((link, index) => (
+                <motion.li key={`additional-${index}`} variants={itemVariants}>
+                  <Link
+                    to={link.path}
+                    className="block text-[#A37B73] hover:text-[#D5A496] font-semibold py-2 border-b border-[#D5A496] last:border-0 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
                 </motion.li>
               ))}
             </motion.ul>

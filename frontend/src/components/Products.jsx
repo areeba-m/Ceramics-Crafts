@@ -1,56 +1,12 @@
-import React, { useState } from "react";
-import { Card, Row, Col, Slider, Checkbox, Select, Pagination, Spin } from "antd";
+import React, { useState, useEffect } from "react";
+import { Card, Row, Col, Slider, Checkbox, Select, Spin, Empty, Button } from "antd";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchedProducts } from "../redux/reducers/productReducers";
-import { useEffect } from "react";
 
 const { Meta } = Card;
 const { Option } = Select;
-
-const products = [
-  {
-    id: 1,
-    name: "Ceramic Vase",
-    price: 45.99,
-    image:
-      "https://imgs.search.brave.com/lZDnRMsBhL_Qs1GGoLano_ubiazw4AzHnUgVDJ9KIYM/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuc3F1YXJlc3Bh/Y2UtY2RuLmNvbS9j/b250ZW50L3YxLzYz/YWQyOTMwMGZkZjY4/MjRhNGIzYmM2ZS9k/YzhiNmM5Yi0yMGYz/LTQzMzMtYTUyMS1m/NDE1YTIyZWQwOWMv/SU1HXzAxOTguanBl/Zw",
-    size: "Medium",
-    color: "Blue",
-    type: "Home Decor",
-  },
-  {
-    id: 2,
-    name: "Handcrafted Bowl",
-    price: 32.5,
-    image:
-      "https://imgs.search.brave.com/VcfhU9oSGmxhFYAPIwzJ_HmB5Ccp4Rn8Ectqd9zHXl4/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzE3MzYwNjUzL2Mv/MTkyMy8xOTIzLzc4/LzY5My9pbC9kNjBj/OWUvNTcxOTYzOTQ5/NC9pbF82MDB4NjAw/LjU3MTk2Mzk0OTRf/ZHE3dC5qcGc",
-    size: "Small",
-    color: "White",
-    type: "Tableware",
-  },
-  {
-    id: 3,
-    name: "Ceramic Vase",
-    price: 45.99,
-    image:
-      "https://imgs.search.brave.com/lZDnRMsBhL_Qs1GGoLano_ubiazw4AzHnUgVDJ9KIYM/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuc3F1YXJlc3Bh/Y2UtY2RuLmNvbS9j/b250ZW50L3YxLzYz/YWQyOTMwMGZkZjY4/MjRhNGIzYmM2ZS9k/YzhiNmM5Yi0yMGYz/LTQzMzMtYTUyMS1m/NDE1YTIyZWQwOWMv/SU1HXzAxOTguanBl/Zw",
-    size: "Medium",
-    color: "Blue",
-    type: "Home Decor",
-  },
-  {
-    id: 4,
-    name: "Handcrafted Bowl",
-    price: 32.5,
-    image:
-      "https://imgs.search.brave.com/VcfhU9oSGmxhFYAPIwzJ_HmB5Ccp4Rn8Ectqd9zHXl4/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzE3MzYwNjUzL2Mv/MTkyMy8xOTIzLzc4/LzY5My9pbC9kNjBj/OWUvNTcxOTYzOTQ5/NC9pbF82MDB4NjAw/LjU3MTk2Mzk0OTRf/ZHE3dC5qcGc",
-    size: "Small",
-    color: "White",
-    type: "Tableware",
-  },
-];
 
 // Animation variants
 const containerVariants = {
@@ -89,39 +45,28 @@ const filterVariants = {
 
 const Products = () => {
   const [priceRange, setPriceRange] = useState([0, 100]);
+  const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedTypes, setSelectedTypes] = useState([]);
 
   const dispatch = useDispatch();
-  const { items, loading, error } = useSelector((state) => state.products);
-  console.log(items)
+  const { items: products, loading, error } = useSelector((state) => state.products);
 
   useEffect(() => {
     dispatch(fetchedProducts());
   }, [dispatch]);
 
-//    const productsToDisplay = items.length > 0 ? items : [];
-   const productsToDisplay = products;
-   console.log("productsToDisplay", productsToDisplay)
+  const materials = [...new Set(products.map(p => p.material).filter(Boolean))];
+  const sizes = [...new Set(products.map(p => p.size).filter(Boolean))];
 
-
-  const filteredProducts = productsToDisplay.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     return (
       product.price >= priceRange[0] &&
       product.price <= priceRange[1] &&
-      (selectedSizes.length === 0 || selectedSizes.includes(product.size)) &&
-      (selectedColors.length === 0 || selectedColors.includes(product.color)) &&
-      (selectedTypes.length === 0 || selectedTypes.includes(product.type))
+      (selectedMaterials.length === 0 || selectedMaterials.includes(product.material)) &&
+      (selectedSizes.length === 0 || selectedSizes.includes(product.size))
     );
   });
-  console.log("fillterproducts", filteredProducts)
 
-  // const sizes = [...new Set(productsToDisplay.map((p) => p.size).filter(Boolean))];
-  // const colors = [...new Set(productsToDisplay.map((p) => p.color).filter(Boolean))];
-  // const types = [...new Set(productsToDisplay.map((p) => p.type).filter(Boolean))];
-
-  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -140,7 +85,7 @@ const Products = () => {
 
   return (
     <motion.div
-      className="container mx-auto px-10 py-8"
+      className="container mx-auto px-4 py-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -155,7 +100,6 @@ const Products = () => {
       </motion.h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Filters Section */}
         <motion.div
           className="w-full lg:w-1/4 p-6 rounded-lg shadow"
           style={{ backgroundColor: "#F7E7CE" }}
@@ -183,46 +127,29 @@ const Products = () => {
           </motion.div>
 
           <motion.div className="mb-6" variants={filterVariants}>
-            <h3 className="font-medium mb-2">Size</h3>
+            <h3 className="font-medium mb-2">Material</h3>
             <Checkbox.Group
-              // options={sizes}
-              value={selectedSizes}
-              onChange={setSelectedSizes}
+              options={materials}
+              value={selectedMaterials}
+              onChange={setSelectedMaterials}
               className="flex flex-col gap-2"
             />
           </motion.div>
 
           <motion.div className="mb-6" variants={filterVariants}>
-            <h3 className="font-medium mb-2">Color</h3>
+            <h3 className="font-medium mb-2">Size (inches)</h3>
             <Select
               mode="multiple"
-              placeholder="Select colors"
-              value={selectedColors}
-              onChange={setSelectedColors}
+              placeholder="Select sizes"
+              value={selectedSizes}
+              onChange={setSelectedSizes}
               className="w-full"
             >
-              {/* {colors.map((color) => (
-                <Option key={color} value={color}>
-                  {color}
+              {sizes.map(size => (
+                <Option key={size} value={size}>
+                  {size}"
                 </Option>
-              ))} */}
-            </Select>
-          </motion.div>
-
-          <motion.div className="mb-6" variants={filterVariants}>
-            <h3 className="font-medium mb-2">Product Type</h3>
-            <Select
-              mode="multiple"
-              placeholder="Select types"
-              value={selectedTypes}
-              onChange={setSelectedTypes}
-              className="w-full"
-            >
-              {/* {types.map((type) => (
-                <Option key={type} value={type}>
-                  {type}
-                </Option>
-              ))} */}
+              ))}
             </Select>
           </motion.div>
         </motion.div>
@@ -234,49 +161,79 @@ const Products = () => {
           initial="hidden"
           animate="show"
         >
-          <Row gutter={[16, 24]}>
-            {productsToDisplay.map((product) => (
-              <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
-                <motion.div variants={itemVariants}>
-                  <Link to={`/product-detail/${product._id}`}>
-                    <motion.div
-                      whileHover={{ y: -5, scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Card
-                        hoverable
-                        style={{ backgroundColor: "#FFE4C4" }}
-                        cover={
-                          <motion.img
-                            alt={product.name}
-                            src={product.images}
-                            // object-contain
-                            className="h-48 object-cover"
-                            whileHover={{ scale: 1.05 }}
-                          />
-                        }
+          {filteredProducts.length > 0 ? (
+            <Row gutter={[16, 24]}>
+              {filteredProducts.map((product) => (
+                <Col key={product.id} xs={24} sm={12} md={8} lg={6}>
+                  <motion.div variants={itemVariants}>
+                    <Link to={`/product-detail/${product.id}`}>
+                      <motion.div
+                        whileHover={{ y: -5, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
-                        <Meta
-                          title={product.name}
-                          description={
-                            <>
-                              <div className="text-lg font-semibold text-[#A37B73]">
-                                ${product.price.toFixed(2)}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {/* type */}
-                                {product.brand}
-                              </div>
-                            </>
+                        <Card
+                          hoverable
+                          style={{ backgroundColor: "#FFE4C4" }}
+                          cover={
+                            <motion.img
+                              alt={product.name}
+                              src={product.imageUrl}
+                              className="h-48 w-full object-cover"
+                              whileHover={{ scale: 1.05 }}
+                            />
                           }
-                        />
-                      </Card>
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              </Col>
-            ))}
-          </Row>
+                        >
+                          <Meta
+                            title={product.name}
+                            description={
+                              <>
+                                <div className="text-lg font-semibold text-[#A37B73]">
+                                  ${product.price.toFixed(2)}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                  {product.material} • {product.size}"
+                                </div>
+                              </>
+                            }
+                          />
+                        </Card>
+                      </motion.div>
+                    </Link>
+                  </motion.div>
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-96">
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <span className="text-lg">
+                    {products.length === 0 
+                      ? "No products available" 
+                      : "No products match your filters"}
+                  </span>
+                }
+              >
+                {products.length === 0 ? (
+                  <Button type="primary" onClick={() => dispatch(fetchedProducts())}>
+                    Refresh Products
+                  </Button>
+                ) : (
+                  <Button 
+                    type="primary" 
+                    onClick={() => {
+                      setPriceRange([0, 100]);
+                      setSelectedMaterials([]);
+                      setSelectedSizes([]);
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
+              </Empty>
+            </div>
+          )}
         </motion.div>
       </div>
     </motion.div>
@@ -284,6 +241,3 @@ const Products = () => {
 };
 
 export default Products;
-
-
-

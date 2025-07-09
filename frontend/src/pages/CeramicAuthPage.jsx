@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Divider, Tabs, message } from "antd";
+import { Form, Input, Button, Divider, Tabs, message, Spin } from "antd";
 import {
   MailOutlined,
   LockOutlined,
@@ -8,15 +8,17 @@ import {
 } from "@ant-design/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm, Controller } from "react-hook-form";
-import ceramicImage from "../assets/CeramicCraft.png"; // Replace with your image path
+import ceramicImage from "../assets/CeramicCraft.png"; 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 const { TabPane } = Tabs;
 
 const CeramicAuthPage = () => {
   const [activeTab, setActiveTab] = useState("login");
   const [isMobile, setIsMobile] = useState(false);
   const [loginError, setLoginError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -24,7 +26,7 @@ const CeramicAuthPage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
+      Name: "",
       email: "",
       phone: "",
       password: "",
@@ -42,40 +44,78 @@ const CeramicAuthPage = () => {
   }, []);
 
   const onSubmit = async (data) => {
+    setLoading(true);
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
     if (activeTab === "signup") {
-      // Handle signup logic
-      console.log("Signup data:", data);
-      message.success("Account created successfully!");
-    } else {
-      // Handle login logic
-      setLoginError(null);
-      const User = {
+      const newUser = {
+        fullName: data.name,
         email: data.email,
         password: data.password,
+        phoneNumber: data.phoneNumber,
       };
+
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/user/login`,
-          User,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
+          `${import.meta.env.VITE_BASE_URL}/api/users/auth/signup`,
+          newUser,
+          { headers }
         );
 
-        console.log(response);
+        console.log("Signup Response:", response);
 
-        if (response.status === 201) {
+        if (response.status === 200) {
           localStorage.setItem("token", response?.data?.token);
           navigate("/");
         }
       } catch (error) {
+        console.error("Signup Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoginError(null);
+
+      const loginUser = {
+        email: data.email,
+        password: data.password,
+      };
+
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/api/users/auth/login`,
+          loginUser,
+          { headers }
+        );
+
+        console.log("Login Response:", response);
+
+        if (response.status === 200) {
+          localStorage.setItem("token", response?.data?.data?.token);
+          localStorage.setItem("userId", response?.data?.data?.id);
+          navigate("/");
+          toast.success("Logged in", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            // transition: "Bounce",
+          });
+        }
+      } catch (error) {
+        console.error("Login Error:", error);
+
         if (error.response) {
-          if (error.response.status === 401) {
+          const status = error.response.status;
+          if (status === 401) {
             setLoginError("Invalid email or password combination");
-          } else if (error.response.status === 404) {
+          } else if (status === 404) {
             setLoginError("Account not found - please check your email");
           } else {
             setLoginError("Login failed - please try again");
@@ -83,9 +123,9 @@ const CeramicAuthPage = () => {
         } else {
           setLoginError("Network error - please check your connection");
         }
+      } finally {
+        setLoading(false);
       }
-      // console.log("Login data:", data);
-      // message.success("Logged in successfully!");
     }
   };
 
@@ -133,7 +173,6 @@ const CeramicAuthPage = () => {
           isMobile ? "flex-col" : "flex-row"
         } bg-white rounded-2xl shadow-lg overflow-hidden`}
       >
-        {/* Product Showcase Section */}
         {!isMobile && (
           <motion.div
             className="w-1/2 bg-amber-100 relative flex items-center justify-center p-8"
@@ -167,14 +206,13 @@ const CeramicAuthPage = () => {
           </motion.div>
         )}
 
-        {/* Auth Form Section */}
         <motion.div
           className={`${
             isMobile ? "w-full" : "w-1/2"
           } bg-white bg-opacity-80 backdrop-blur-sm p-8`}
           variants={itemVariants}
         >
-          {/* Logo/Header */}
+
           <motion.div className="text-center py-4" variants={itemVariants}>
             <h1 className="text-3xl font-serif text-stone-800 font-medium">
               CeramicCrafts
@@ -184,7 +222,6 @@ const CeramicAuthPage = () => {
             </p>
           </motion.div>
 
-          {/* Tabs */}
           <motion.div variants={itemVariants}>
             <Tabs
               activeKey={activeTab}
@@ -342,22 +379,6 @@ const CeramicAuthPage = () => {
                 </motion.div>
               </AnimatePresence>
 
-              {activeTab === "login" && (
-                <motion.div
-                  className="flex justify-end mb-4"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <a
-                    href="#"
-                    className="text-sm text-amber-600 hover:text-amber-700"
-                  >
-                    Forgot password?
-                  </a>
-                </motion.div>
-              )}
-
               <Form.Item>
                 <motion.div
                   whileHover={{ scale: 1.01 }}
@@ -368,8 +389,15 @@ const CeramicAuthPage = () => {
                     htmlType="submit"
                     block
                     className="h-10 rounded-lg bg-amber-600 hover:bg-amber-700 border-none text-white font-medium"
+                    disabled={loading}
                   >
-                    {activeTab === "login" ? "Log In" : "Create Account"}
+                    {loading ? (
+                      <Spin size="small" />
+                    ) : activeTab === "login" ? (
+                      "Log In"
+                    ) : (
+                      "Create Account"
+                    )}
                   </Button>
                 </motion.div>
               </Form.Item>
@@ -390,6 +418,7 @@ const CeramicAuthPage = () => {
                 handleTabChange(activeTab === "login" ? "signup" : "login")
               }
               className="text-amber-600 hover:text-amber-700 font-medium"
+              disabled={loading}
             >
               {activeTab === "login" ? "Sign up" : "Log in"}
             </button>
