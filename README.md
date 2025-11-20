@@ -1,7 +1,7 @@
 # 🌿 Clay Décor E-Commerce Website  
 *A full-stack internship project built with React, Java Spring Boot (Microservices), and MySQL*
 
-## 📝 Project Overview
+## Project Overview
 This project is a modern e-commerce web application designed for handcrafted **clay décor products**—including wall hangings, mini décor items, and customizable pieces.  
 It features a responsive UI, product customization, a checkout flow, and an admin panel.  
 
@@ -18,7 +18,7 @@ It features a responsive UI, product customization, a checkout flow, and an admi
 - REST APIs  
 - MySQL database  
 
-## 📦 Features
+## Features
 - Homepage with hero section
 - Grid view with product thumbnail, name, price  
 - Product filtering
@@ -49,3 +49,7 @@ product-service
 customized-product-service
 common-security
 ```
+
+### Team
+- Frontend Developer: [HAKI](https://github.com/miniHAKI)
+- Backend Developer: [Areeba Mujahid](https://github.com/areeba-m)
